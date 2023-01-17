@@ -1,14 +1,8 @@
-import { initializeApp } from "firebase/app";
-import {
-    getBytes,
-    getStorage,
-    ref as sref,
-    uploadBytes,
-    deleteObject,
-} from "firebase/storage";
-import { getDatabase, ref as dref, get, set, child } from "firebase/database";
-import { Part } from "./Interfaces";
-import dotenv from "dotenv";
+import { initializeApp } from 'firebase/app';
+import { getBytes, getStorage, ref as sref, uploadBytes, deleteObject } from 'firebase/storage';
+import { getDatabase, ref as dref, get, set, child } from 'firebase/database';
+import { Part } from './Interfaces';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const firebaseConfig = {
@@ -30,9 +24,9 @@ const db = getDatabase();
 const dbRef = dref(getDatabase());
 
 export const getAllPartsFB = async () => {
-    let parts = [""];
+    let parts = [''];
     let error = false,
-        errorMessage = "";
+        errorMessage = '';
 
     await get(child(dbRef, `/`))
         .then((snapshot) => {
@@ -45,12 +39,11 @@ export const getAllPartsFB = async () => {
             errorMessage = error;
         });
 
-    if (error) return errorMessage;
-    else return parts;
+    return error ? errorMessage : parts;
 };
 
 export const setPartFB = async (part: Part) => {
-    let errorMessage = "";
+    let errorMessage = '';
     let data = part.dev.delete ? null : part;
 
     await set(dref(db, `/${part.id}`), data).catch((e) => {
@@ -58,41 +51,40 @@ export const setPartFB = async (part: Part) => {
         errorMessage = e;
     });
 
-    if (errorMessage !== "") return errorMessage;
-    else return "success";
+    return errorMessage !== '' ? errorMessage : 'success';
 };
 
-export const uploadPartFirebase = async (
-    partFile: any,
-    fileId: string,
-    fileType: string
-) => {
+export const uploadPartFirebase = async (partFile: any, fileId: string, fileType: string) => {
     let targetRef: any;
-    let errorMessage = "";
+    let errorMessage = '';
 
-    if (fileType === "cam") targetRef = sref(storage, `cam_files/${fileId}`);
+    if (fileType === 'cam') targetRef = sref(storage, `cam_files/${fileId}`);
     else targetRef = sref(storage, `parts_files/${fileId}`);
+
     await uploadBytes(targetRef, partFile.buffer).catch((e) => {
         errorMessage = e;
     });
-    if (errorMessage !== "") return errorMessage;
-    return "success";
+
+    return errorMessage !== '' ? errorMessage : 'success';
 };
 
 export const deletePartFB = async (fileId: string, fileType: string) => {
     let targetRef: any;
-    let errorMessage = "";
+    let errorMessage = '';
 
-    if (fileType === "cam") targetRef = sref(storage, `cam_files/${fileId}`);
+    if (fileType === 'cam') targetRef = sref(storage, `cam_files/${fileId}`);
     else targetRef = sref(storage, `parts_files/${fileId}`);
+
     await deleteObject(targetRef).catch((e) => (errorMessage = e));
-    if (errorMessage !== "") return errorMessage;
-    return "success";
+
+    return errorMessage !== '' ? errorMessage : 'success';
 };
 
 export const getPartDownloadURLFirebase = async (fileId: any, fileExt: any) => {
     let targetRef: any;
-    if (fileExt === "cam") targetRef = sref(storage, `cam_files/${fileId}`);
+
+    if (fileExt === 'cam') targetRef = sref(storage, `cam_files/${fileId}`);
     else targetRef = sref(storage, `parts_files/${fileId}`);
+
     return await getBytes(targetRef);
 };

@@ -6,6 +6,7 @@
     "license": "UNLICENSED",
     "dependencies": {
         "@hkamran/utility-web": "^1.0.2",
+        "@netlify/functions": "^1.4.0",
         "@tailwindcss/typography": "^0.5.8",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",

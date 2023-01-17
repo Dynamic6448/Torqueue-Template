@@ -1,12 +1,6 @@
-import asyncHandler from "express-async-handler";
-import {
-    getAllPartsFB,
-    setPartFB,
-    uploadPartFirebase,
-    getPartDownloadURLFirebase,
-    deletePartFB,
-} from "./firebase";
-import { Request, Response } from "express";
+import asyncHandler from 'express-async-handler';
+import { getAllPartsFB, setPartFB, uploadPartFirebase, getPartDownloadURLFirebase, deletePartFB } from './firebase';
+import { Request, Response } from 'express';
 
 interface MulterRequest extends Request {
     file: any;
@@ -32,18 +26,14 @@ export const uploadFile = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const deleteFile = asyncHandler(async (req: Request, res: Response) => {
-    let cadDelete = "success",
-        camDelete = "success";
+    let cadDelete = 'success',
+        camDelete = 'success';
 
-    if (req.body.hotPart.files.cadExt !== "")
-        cadDelete = await deletePartFB(req.body.hotPart.id, "cad");
+    if (req.body.hotPart.files.cadExt !== '') cadDelete = await deletePartFB(req.body.hotPart.id, 'cad');
 
-    if (req.body.hotPart.files.camExt !== "")
-        camDelete = await deletePartFB(req.body.hotPart.id, "cam");
+    if (req.body.hotPart.files.camExt !== '') camDelete = await deletePartFB(req.body.hotPart.id, 'cam');
 
-    res.send(
-        cadDelete === "success" && camDelete === "success" ? "success" : "error"
-    );
+    res.send(cadDelete === 'success' && camDelete === 'success' ? 'success' : 'error');
 });
 
 export const getFileDownloadURL = asyncHandler(async (req, res) => {
@@ -59,9 +49,9 @@ export const getFileDownloadURL = asyncHandler(async (req, res) => {
     }
 
     res.writeHead(200, {
-        "Content-Type": "application/pdf",
-        "content-disposition": `attachment`,
-        "Content-Length": buf.byteLength,
+        'Content-Type': 'application/pdf',
+        'content-disposition': `attachment`,
+        'Content-Length': buf.byteLength,
     });
 
     res.end(buf);
